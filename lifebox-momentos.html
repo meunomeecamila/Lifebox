@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meus Momentos no Lifebox</title>
+<style>
+  :root{
+    --bg:#141110;
+    --bg2:#1c1815;
+    --orange:#F2701A;
+    --cream:#F6EDE1;
+    --brown:#2B1D14;
+    --muted:#B8A99A;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--cream);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
+
+  header{padding:64px 24px 40px;text-align:center;}
+  .mark{display:inline-flex;align-items:center;justify-content:center;
+    width:56px;height:56px;background:var(--orange);border-radius:14px;
+    transform:rotate(-6deg);margin-bottom:22px;font-size:26px;}
+  h1{font-size:clamp(28px,6vw,48px);font-weight:800;letter-spacing:-1px;
+    margin:0 0 12px;line-height:1.05;}
+  h1 span{color:var(--orange);}
+  header p{color:var(--muted);max-width:440px;margin:0 auto;font-size:16px;}
+
+  .row{margin:38px 0;}
+  .row h2{padding:0 24px;font-size:19px;font-weight:700;margin:0 0 14px;
+    display:flex;align-items:center;gap:10px;}
+  .row h2::before{content:"";width:6px;height:6px;border-radius:50%;
+    background:var(--orange);flex:none;}
+
+  .track-wrap{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);}
+  .track{display:flex;gap:16px;width:max-content;padding:2px 24px;
+    animation-name:scroll;animation-timing-function:linear;animation-iteration-count:infinite;}
+  .track:hover{animation-play-state:paused;}
+  .row.rev .track{animation-direction:reverse;}
+
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  .card{position:relative;flex:none;width:210px;height:270px;border-radius:16px;
+    overflow:hidden;background:var(--brown);border:1px solid #3a291c;}
+  .card img{width:100%;height:100%;object-fit:cover;display:block;}
+  .placeholder{width:100%;height:100%;display:flex;align-items:center;
+    justify-content:center;font-size:34px;
+    background:linear-gradient(150deg,var(--brown),#3a2517);}
+  .cap{position:absolute;left:0;right:0;bottom:0;padding:10px 12px;
+    font-size:13px;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent);}
+
+  footer{text-align:center;padding:50px 24px 60px;color:var(--muted);font-size:13px;}
+  footer strong{color:var(--orange);}
+
+  @media (prefers-reduced-motion: reduce){.track{animation:none;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">🧡</div>
+  <h1>Meus melhores<br>momentos no <span>Lifebox</span></h1>
+  <p>Um cantinho só pra guardar (e mostrar pra vocês) tudo que a gente viveu por aí.</p>
+</header>
+
+<div id="rows"></div>
+
+<footer>Feito com carinho por uma cliente fiel do <strong>Lifebox</strong> 🍔🧡</footer>
+
+<script>
+// ============================================================
+// EDITE AQUI: adicione quantas fotos quiser em cada categoria.
+// "src": link direto da imagem (pode ser uma URL da internet).
+//        Deixe "" (vazio) para mostrar um espaço reservado.
+// "emoji": usado só quando "src" estiver vazio.
+// "cap": legenda curta que aparece embaixo da foto.
+// ============================================================
+const IMAGES = {
+  "Comemorações especiais": [
+    { src: "images/img01.jpeg", emoji: "🎉", cap: "Aniversário da minha amiga" },
+    { src: "images/img02.jpeg", emoji: "🥳", cap: "Dois anos de namoro" },
+    { src: "images/img03.jpeg", emoji: "🎂", cap: "Despedida do intercâmbio de uma amiga" },
+    { src: "images/img04.jpeg", emoji: "🎂", cap: "Aniversário de casamento dos meus pais" },
+    { src: "images/img05.jpeg", emoji: "🎂", cap: "Um ano de namoro" },
+    { src: "images/img06.jpeg", emoji: "🎂", cap: "Meu aniversário de 2025" },
+    { src: "images/img07.jpeg", emoji: "🎂", cap: "Meu aniversário de 2026" },
+    { src: "images/img08.jpeg", emoji: "🎂", cap: "Três anos de namoro" },
+    { src: "images/img09.jpeg", emoji: "🎂", cap: "Meu aniversário de 2024" },
+    { src: "images/img10.jpeg", emoji: "🎂", cap: "6 meses de namoro" },
+    { src: "images/img21.jpeg", emoji: "🎂", cap: "Dia dos namorados" },
+    { src: "images/img18.jpeg", emoji: "🎂", cap: "Pós formatura" },
+  ],
+  "O melhor brownie do mundo": [
+    { src: "images/img11.jpeg", emoji: "🍫", cap: "Aquele brownie inigualável" },
+    { src: "images/img12.jpeg", emoji: "🍫", cap: "Sorvete + chocolate" },
+    { src: "images/img13.jpeg", emoji: "🍫", cap: "Sou obcecada" },
+    { src: "images/img14.jpeg", emoji: "🍫", cap: "Mesmo no delivery" },
+    { src: "images/img15.jpeg", emoji: "🍫", cap: "Aquela vontade de um docinho" },
+    { src: "images/img16.jpeg", emoji: "🍫", cap: "O brownie que eu mais amo" },
+    { src: "images/img17.jpeg", emoji: "🍫", cap: "Nada se compara" },
+    { src: "images/img18.jpeg", emoji: "🍫", cap: "Explosão de sabores" },
+    { src: "images/img19.jpeg", emoji: "🍫", cap: "Life + brownie + box" },
+    { src: "images/img20.jpeg", emoji: "🍫", cap: "O melhor de todos" },
+    { src: "images/img21.jpeg", emoji: "🍫", cap: "Sou a maior fã!" },
+    { src: "images/img22.jpeg", emoji: "🍫", cap: "Pelo menos uma vez por semana!" },
+    { src: "images/img23.jpeg", emoji: "🍫", cap: "Lifebox, amo vocês!" },
+  ],
+  "Dia a dia": [
+    { src: "images/img24.jpeg", emoji: "🍔", cap: "Lanche de quinta comum" },
+    { src: "images/img25.jpeg", emoji: "🍔", cap: "Ganhando um hambúrguer" },
+    { src: "images/img26.jpeg", emoji: "🍔", cap: "Lanche de sexta comum" },
+    { src: "images/img27.jpeg", emoji: "🍔", cap: "O melhor de todos" },
+    { src: "images/img28.jpeg", emoji: "🍔", cap: "Não tem tempo ruim no lifebox" },
+    { src: "images/img29.jpeg", emoji: "🍔", cap: "Acertando o placar!" },
+    { src: "images/img30.jpeg", emoji: "🍔", cap: "Lanche de uma segunda comum" },
+    { src: "images/img31.jpeg", emoji: "🍔", cap: "A melhor soda do mundo" },
+    { src: "images/img32.jpeg", emoji: "🍔", cap: "Sei o cardápio de cor!" },
+    { src: "images/img33.jpeg", emoji: "🍔", cap: "Vale ir sozinha?" },
+    { src: "images/img34.jpeg", emoji: "🍔", cap: "Levando meus avós!" },
+    { src: "images/img35.jpeg", emoji: "🍔", cap: "Reunião de amigos" },
+  ]
+};
+
+const rowsEl = document.getElementById('rows');
+let i = 0;
+for (const [category, items] of Object.entries(IMAGES)) {
+  if (!items.length) continue;
+  const doubled = items.concat(items); // duplica p/ loop infinito suave
+  const cardsHTML = doubled.map(it => `
+    <div class="card">
+      ${it.src
+        ? `<img src="${it.src}" alt="${it.cap || ''}" loading="lazy">`
+        : `<div class="placeholder">${it.emoji || '🧡'}</div>`}
+      ${it.cap ? `<div class="cap">${it.cap}</div>` : ''}
+    </div>`).join('');
+
+  const duration = Math.max(items.length * 6, 14); // mais fotos = rolagem mais longa
+  const section = document.createElement('section');
+  section.className = 'row' + (i % 2 ? ' rev' : '');
+  section.innerHTML = `
+    <h2>${category}</h2>
+    <div class="track-wrap">
+      <div class="track" style="animation-duration:${duration}s">${cardsHTML}</div>
+    </div>`;
+  rowsEl.appendChild(section);
+  i++;
+}
+</script>
+</body>
+</html>
